@@ -1,5 +1,7 @@
 import { useTaskContext } from "../context/useTaskContext";
+import { createTask } from "../logic/tasks";
 import TaskCard from "./TaskCard";
+import { Box, Heading, VStack, Button, Text } from "@chakra-ui/react";
 
 function Column({ status }) {
 	const { tasks, addTask } = useTaskContext();
@@ -8,30 +10,35 @@ function Column({ status }) {
 	const handleAdd = () => {
 		const title = prompt("Ny uppgift:");
 		if (title) {
-			addTask({
-				id: Date.now(),
-				title,
-				status,
-				date: new Date().toISOString().slice(0, 10),
-			});
+			const task = createTask({ title, status });
+			addTask(task);
 		}
 	};
 
 	return (
-		<div
-			style={{
-				background: "#ddd",
-				padding: "1rem",
-				borderRadius: "8px",
-				minWidth: "200px",
-			}}
+		<Box
+			bg="gray.100"
+			p={4}
+			borderRadius="md"
+			minW={{ base: "100%", md: "240px" }}
 		>
-			<h2>{status.toUpperCase()}</h2>
-			{filtered.map((task) => (
-				<TaskCard key={task.id} task={task} />
-			))}
-			<button onClick={handleAdd}>+ Skapa ny uppgift</button>
-		</div>
+			<Heading as="h3" size="sm" mb={3} textTransform="uppercase">
+				{status}
+			</Heading>
+
+			<VStack align="stretch" spacing={3} mb={3}>
+				{filtered.map((task) => (
+					<TaskCard key={task.id} task={task} />
+				))}
+				{filtered.length === 0 && (
+					<Text color="gray.500">Inga uppgifter här ännu.</Text>
+				)}
+			</VStack>
+
+			<Button size="sm" colorScheme="teal" onClick={handleAdd} width="full">
+				+ Skapa ny uppgift
+			</Button>
+		</Box>
 	);
 }
 

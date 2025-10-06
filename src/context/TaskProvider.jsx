@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TaskContext } from "./TaskContext";
+import { loadTasks, saveTasks } from "../logic/tasks";
 
 export function TaskProvider({ children }) {
-	const [tasks, setTasks] = useState([
-		{ id: 1, title: "Vattna blommorna", status: "todo" },
-		{ id: 2, title: "Slänga soporna", status: "todo" },
-		{ id: 3, title: "Kolla på TV", status: "doing" },
-		{ id: 4, title: "Bygga en ny app", status: "done" },
-	]);
+	const [tasks, setTasks] = useState(() => loadTasks());
+
+	useEffect(() => {
+		saveTasks(tasks);
+	}, [tasks]);
 
 	const addTask = (task) => setTasks((prev) => [...prev, task]);
 	const updateTask = (id, updates) =>

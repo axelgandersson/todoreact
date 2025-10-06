@@ -1,20 +1,34 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link as RouterLink } from "react-router-dom";
+import { Box, Heading, HStack, Link as ChakraLink } from "@chakra-ui/react";
 import Board from "./components/Board";
 
 function App() {
 	return (
-		<div>
-			<h1>The Board App</h1>
-			<nav style={{ marginBottom: "1rem" }}>
-				<Link to="/">All</Link> | <Link to="/todo">Todo</Link> |{" "}
-				<Link to="/doing">Doing</Link> | <Link to="/done">Done</Link>
-			</nav>
+		<Box p={6} maxW="1200px" mx="auto">
+			<Heading as="h1" mb={4} size="lg">
+				The Board App
+			</Heading>
+
+			<HStack spacing={4} mb={6}>
+				<ChakraLink as={RouterLink} to="/">
+					All
+				</ChakraLink>
+				<ChakraLink as={RouterLink} to="/todo">
+					Todo
+				</ChakraLink>
+				<ChakraLink as={RouterLink} to="/doing">
+					Doing
+				</ChakraLink>
+				<ChakraLink as={RouterLink} to="/done">
+					Done
+				</ChakraLink>
+			</HStack>
 
 			<Routes>
 				<Route path="/" element={<Board />} />
 				<Route path="/:columnId" element={<Board />} />
 			</Routes>
-		</div>
+		</Box>
 	);
 }
 

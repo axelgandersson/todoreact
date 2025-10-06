@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { Flex } from "@chakra-ui/react";
 import Column from "./Column";
 
 const columns = ["todo", "doing", "done"];
@@ -8,11 +9,11 @@ function Board() {
 	const visibleColumns = columnId ? [columnId] : columns;
 
 	return (
-		<div style={{ display: "flex", gap: "1rem" }}>
+		<Flex gap={4} align="flex-start" wrap={{ base: "wrap", md: "nowrap" }}>
 			{visibleColumns.map((col) => (
 				<Column key={col} status={col} />
 			))}
-		</div>
+		</Flex>
 	);
 }
 
