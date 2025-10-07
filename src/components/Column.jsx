@@ -1,18 +1,20 @@
+import { useState } from "react";
 import { useTaskContext } from "../context/useTaskContext";
 import { createTask } from "../logic/tasks";
 import TaskCard from "./TaskCard";
+import AddTaskPopup from "./AddTaskPopup";
 import { Box, Heading, VStack, Button, Text } from "@chakra-ui/react";
 
 function Column({ status }) {
 	const { tasks, addTask } = useTaskContext();
 	const filtered = tasks.filter((t) => t.status === status);
+	const [isOpen, setIsOpen] = useState(false);
 
-	const handleAdd = () => {
-		const title = prompt("Ny uppgift:");
-		if (title) {
-			const task = createTask({ title, status });
-			addTask(task);
-		}
+	const handleAdd = () => setIsOpen(true);
+
+	const handleAddConfirm = ({ title, status: pickedStatus }) => {
+		const task = createTask({ title, status: pickedStatus });
+		addTask(task);
 	};
 
 	return (
@@ -35,9 +37,20 @@ function Column({ status }) {
 				)}
 			</VStack>
 
-			<Button size="sm" colorScheme="teal" onClick={handleAdd} width="full">
-				+ Skapa ny uppgift
-			</Button>
+			{status === "todo" && (
+				<>
+					<Button size="sm" colorScheme="teal" onClick={handleAdd} width="full">
+						+ Skapa ny uppgift
+					</Button>
+
+					<AddTaskPopup
+						isOpen={isOpen}
+						onClose={() => setIsOpen(false)}
+						defaultStatus={status}
+						onAdd={handleAddConfirm}
+					/>
+				</>
+			)}
 		</Box>
 	);
 }

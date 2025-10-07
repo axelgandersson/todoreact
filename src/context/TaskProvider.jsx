@@ -1,21 +1,19 @@
-import { useState, useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { TaskContext } from "./TaskContext";
-import { loadTasks, saveTasks } from "../logic/tasks";
+import { saveTasks } from "../logic/tasks";
+import tasksReducer, { init } from "../logic/tasksReducer";
 
 export function TaskProvider({ children }) {
-	const [tasks, setTasks] = useState(() => loadTasks());
+	const [tasks, dispatch] = useReducer(tasksReducer, undefined, init);
 
 	useEffect(() => {
 		saveTasks(tasks);
 	}, [tasks]);
 
-	const addTask = (task) => setTasks((prev) => [...prev, task]);
+	const addTask = (task) => dispatch({ type: "ADD", payload: task });
 	const updateTask = (id, updates) =>
-		setTasks((prev) =>
-			prev.map((t) => (t.id === id ? { ...t, ...updates } : t))
-		);
-	const deleteTask = (id) =>
-		setTasks((prev) => prev.filter((t) => t.id !== id));
+		dispatch({ type: "UPDATE", payload: { id, updates } });
+	const deleteTask = (id) => dispatch({ type: "DELETE", payload: id });
 
 	return (
 		<TaskContext.Provider value={{ tasks, addTask, updateTask, deleteTask }}>

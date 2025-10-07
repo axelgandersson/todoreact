@@ -6,12 +6,19 @@ import {
 	Text,
 	IconButton,
 	Spacer,
+	useBreakpointValue,
 } from "@chakra-ui/react";
 
 function TaskCard({ task }) {
 	const { updateTask, deleteTask } = useTaskContext();
 	const moveLeft = { doing: "todo", done: "doing" };
 	const moveRight = { todo: "doing", doing: "done" };
+
+	const leftSymbol = useBreakpointValue({ base: "↑", md: "←" });
+	const rightSymbol = useBreakpointValue({ base: "↓", md: "→" });
+
+	const leftAria = useBreakpointValue({ base: "Move up", md: "Move left" });
+	const rightAria = useBreakpointValue({ base: "Move down", md: "Move right" });
 
 	return (
 		<Box bg="white" p={3} borderRadius="md" boxShadow="sm">
@@ -31,8 +38,8 @@ function TaskCard({ task }) {
 					{moveLeft[task.status] && (
 						<IconButton
 							size="sm"
-							aria-label="Move left"
-							icon={<Text as="span">←</Text>}
+							aria-label={leftAria}
+							icon={<Text as="span">{leftSymbol}</Text>}
 							onClick={() =>
 								updateTask(task.id, { status: moveLeft[task.status] })
 							}
@@ -41,8 +48,8 @@ function TaskCard({ task }) {
 					{moveRight[task.status] && (
 						<IconButton
 							size="sm"
-							aria-label="Move right"
-							icon={<Text as="span">→</Text>}
+							aria-label={rightAria}
+							icon={<Text as="span">{rightSymbol}</Text>}
 							onClick={() =>
 								updateTask(task.id, { status: moveRight[task.status] })
 							}
